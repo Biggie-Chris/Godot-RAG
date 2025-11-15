@@ -77,21 +77,32 @@ class OpenAIEmbedding(BaseEmbeddings):
         super().__init__(path, is_api)
         if self.is_api:
             self.client = OpenAI()
-            # 从环境变量中获取 硅基流动 密钥
             self.client.api_key = os.getenv("OPENAI_API_KEY")
-            # 从环境变量中获取 硅基流动 的基础URL
             self.client.base_url = os.getenv("OPENAI_BASE_URL")
     
-    def get_embedding(self, text: str, model: str = "BAAI/bge-m3") -> List[float]:
-        """
-        此处默认使用轨迹流动的免费嵌入模型 BAAI/bge-m3
-        """
-        if self.is_api:
-            text = text.replace("\n", " ")
-            return self.client.embeddings.create(input=[text], model=model).data[0].embedding
-        else:
+    def get_embeddings(self, texts, model="Qwen/Qwen3-Embedding-4B"):
+        if not self.is_api:
             raise NotImplementedError
 
-def get_embedding(text: str, model: str = "BAAI/bge-m3") -> List[float]:
+        cleaned = [t.replace("\n", " ") for t in texts]
+        resp = self.client.embeddings.create(input=cleaned, model=model)
+
+        vectors = []
+        for d in resp.data:
+            emb = d.embedding
+
+            # flatten 任意嵌套的 [[[vec]]] → [vec]
+            while isinstance(emb, list) and len(emb) == 1:
+                emb = emb[0]
+
+            vectors.append(emb)
+
+        return vectors
+
+
+def get_embeddings(texts: List[str], model: str = "Qwen/Qwen3-Embedding-4B") -> List[List[float]]:
+    """
+    批量 embedding 的便捷函数
+    """
     embedder = OpenAIEmbedding(is_api=True)
-    return embedder.get_embedding(text, model)
+    return embedder.get_embeddings(texts, model)
