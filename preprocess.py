@@ -30,6 +30,7 @@ enc = tiktoken.get_encoding("cl100k_base")
 
 def ensure_dirs() -> None:
     """创建所需目录"""
+    os.makedirs(DOC_DIR, exist_ok=True)
     os.makedirs(DATA_DIR, exist_ok=True)
     os.makedirs(CHUNKS_DIR, exist_ok=True)
     os.makedirs(META_DIR, exist_ok=True)
@@ -244,9 +245,9 @@ def build_chroma_from_chunks() -> None:
 def main():
     ensure_dirs()
     
-    # searchindex =  parse_searchindex()
-    # meata_map = build_source_meta(searchindex)
-    # generate_chunks(meata_map)
+    searchindex =  parse_searchindex()
+    meata_map = build_source_meta(searchindex)
+    generate_chunks(meata_map)
     build_chroma_from_chunks()
     
 if __name__ == "__main__":
