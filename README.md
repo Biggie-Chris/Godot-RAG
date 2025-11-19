@@ -63,7 +63,7 @@ python main.py
 
 启动系统后，你可以询问各种Godot相关问题：
 
-```
+
 🎮 Godot RAG 系统启动！输入你的问题，输入 exit 退出。
 
 ❓ 你的问题： 如何在Godot中创建一个简单的2D角色控制器？
@@ -101,7 +101,7 @@ func _physics_process(delta):
   ↳ doc/_sources/tutorials/2d/2d_movement.txt
 - doc_id: 45 | 相似度: 0.8123
   ↳ doc/_sources/classes/class_characterbody2d.txt
-```
+
 
 ## 🔌 MCP服务
 
